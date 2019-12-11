@@ -1,5 +1,5 @@
 import unittest
-from app import ttd
+from app import ttd, create_app_setting
 
 
 class TestCase(unittest.TestCase):
@@ -22,3 +22,44 @@ class TestCase(unittest.TestCase):
         expect = 8
         value = ttd(expect)
         self.assertEqual(expect, value)
+
+
+class AppSettingTestCase(unittest.TestCase):
+    def test_required_key_field(self):
+        data = {
+            'value': 'abc'
+        }
+        value = create_app_setting(data)
+        self.assertEqual(value, "Required Fields")
+
+    def test_required_value_field(self):
+        data = {
+            'key': 'abc'
+        }
+        value = create_app_setting(data)
+        self.assertEqual(value, "Required Fields")
+
+    def test_invalid_key_data(self):
+        data = {
+            'value': 'value',
+            'key': 'type3'
+        }
+        value = create_app_setting(data)
+        self.assertEqual(value, "Invalid Key")
+
+    def test_invalid_value_data(self):
+        data = {
+            'value': True,
+            'key': 'type1'
+        }
+        value = create_app_setting(data)
+        self.assertEqual(value, 'Invalid Value')
+
+    def test_create_success(self):
+        data = {
+            'value': 'value',
+            'key': 'type1'
+        }
+        value = create_app_setting(data)
+        self.assertEqual(data.get('value'), value.get('value'))
+        self.assertEqual(data.get('key'), value.get('key'))
